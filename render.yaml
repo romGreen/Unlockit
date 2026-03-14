@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: unlockit-locksmith
+    runtime: static
+    plan: free
+    buildCommand: npm run build
+    staticPublishPath: dist
