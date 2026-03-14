@@ -97,6 +97,17 @@ ul {
   color: #38516d;
 }
 
+.hero-definition {
+  margin-top: 18px;
+  max-width: 36rem;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: #f3f7fc;
+  border: 1px solid rgba(41, 99, 216, 0.08);
+  color: #132238;
+  font-weight: 600;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -186,6 +197,23 @@ main {
   font-size: 1.05rem;
 }
 
+.section-content > p + p {
+  margin-top: 16px;
+}
+
+.definition-card {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: #f3f7fc;
+  border: 1px solid rgba(41, 99, 216, 0.08);
+  color: #132238;
+  font-weight: 600;
+}
+
+.section-intro {
+  margin-bottom: 16px;
+}
+
 .services-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -198,13 +226,36 @@ main {
   background: #f3f7fc;
   border: 1px solid rgba(41, 99, 216, 0.08);
   color: #132238;
-  font-weight: 600;
+}
+
+.service-card h3,
+.faq-item h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: #132238;
+}
+
+.service-card p,
+.faq-item p {
+  color: #38516d;
 }
 
 .hours-line {
   font-size: 1.2rem;
   font-weight: 700;
   color: #132238;
+}
+
+.faq-list {
+  display: grid;
+  gap: 14px;
+}
+
+.faq-item {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: #f8fbff;
+  border: 1px solid rgba(19, 34, 56, 0.08);
 }
 
 .contact-list {
