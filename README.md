@@ -42,3 +42,25 @@ npm run build
 - Publish Directory: `dist`
 
 לאחר יצירת השירות, Render יבנה את האתר וייתן כתובת `onrender.com`.
+
+## העלאה ל-Netlify
+
+הפרויקט כולל קובץ `netlify.toml` עם הגדרות הבנייה הבסיסיות.
+
+1. מעלים את הפרויקט ל-GitHub.
+2. נכנסים ל-Netlify ובוחרים `Add new project` ואז `Import an existing project`.
+3. מחברים את הריפו.
+4. Netlify יכול לזהות את ההגדרות מהקובץ `netlify.toml`.
+
+אם מזינים ידנית, השתמשו בערכים הבאים:
+
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Root directory: להשאיר ריק
+- Environment variables: אין צורך
+
+לאחר מכן לוחצים על Deploy והאתר יקבל כתובת `netlify.app`.
+
+## דומיין מותאם ב-Netlify
+
+אפשר לרכוש דומיין ישירות דרך Netlify או לחבר דומיין קיים דרך `Domain management`.
