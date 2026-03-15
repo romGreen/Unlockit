@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://unlockit-tel.com/sitemap.xml
