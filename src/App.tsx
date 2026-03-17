@@ -11,8 +11,9 @@ type FaqItem = {
 };
 
 const businessDefinition =
-  'Unlockit היא עסק מנעולנות בתל אביב המספק שירותי פריצת דלתות, החלפת מנעולים, תיקון מנעולים, התקנת מנעולים חדשים ופריצת רכבים.';
+  'דביר הוא מנעולן בתל אביב המספק שירותי פריצת דלתות, החלפת מנעולים, תיקון מנעולים, התקנת מנעולים חדשים ופריצת רכבים בתל אביב והסביבה.';
 const siteUrl = 'https://dvir-locksmith.com';
+const businessName = 'דביר מנעולן';
 
 const services: Service[] = [
   {
@@ -39,14 +40,14 @@ const services: Service[] = [
 
 const faqItems: FaqItem[] = [
   {
-    question: 'אילו שירותים Unlockit מציעה?',
+    question: 'אילו שירותי מנעולן דביר מציע?',
     answer:
-      'Unlockit מציעה פריצת דלתות, החלפת מנעולים, תיקון מנעולים, התקנת מנעולים חדשים ופריצת רכבים בתל אביב והסביבה.',
+      'דביר מציע פריצת דלתות, החלפת מנעולים, תיקון מנעולים, התקנת מנעולים חדשים ופריצת רכבים בתל אביב והסביבה.',
   },
   {
-    question: 'באילו אזורים Unlockit נותנת שירות?',
+    question: 'באילו אזורים דביר נותן שירות?',
     answer:
-      'Unlockit נותנת שירות בתל אביב והסביבה, עם הגעה מהירה ללקוחות באזורי השירות הקרובים.',
+      'דביר נותן שירות בתל אביב והסביבה, עם הגעה מהירה ללקוחות באזורי השירות הקרובים.',
   },
   {
     question: 'מתי כדאי להחליף מנעול?',
@@ -59,9 +60,9 @@ const faqItems: FaqItem[] = [
       'אם הדלת ננעלת בקושי, המפתח מסתובב בצורה לא תקינה או שהמנגנון נשחק, מומלץ להזמין בדיקה ותיקון מנעול.',
   },
   {
-    question: 'האם Unlockit מציעה גם פריצת רכבים?',
+    question: 'האם דביר מציע גם פריצת רכבים?',
     answer:
-      'כן. Unlockit מציעה שירות פריצת רכבים במקרים שבהם הרכב נעול והמפתח נשאר בפנים או אינו זמין.',
+      'כן. דביר מציע שירות פריצת רכבים במקרים שבהם הרכב נעול והמפתח נשאר בפנים או אינו זמין.',
   },
 ];
 
@@ -69,9 +70,9 @@ const structuredData = [
   {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    name: 'Unlockit',
+    name: businessName,
     url: siteUrl,
-    description: `${businessDefinition} השירות ניתן בתל אביב והסביבה לבית, לעסק ולרכב.`,
+    description: `${businessDefinition} השירות ניתן לבית, לעסק ולרכב ומבוסס על שירות אישי, מקצועי ואמין.`,
     telephone: '+972526660845',
     email: 'dvirsarig@gmail.com',
     address: {
@@ -121,7 +122,7 @@ function Section({ id, title, children }: SectionProps) {
   return (
     <section id={id} className="section">
       <div className="section-heading">
-        <p className="section-kicker">Unlockit</p>
+        <p className="section-kicker">{businessName}</p>
         <h2>{title}</h2>
       </div>
       <div className="section-content">{children}</div>
@@ -140,11 +141,11 @@ function App() {
       <div className="page-shell">
         <header className="hero">
           <div className="hero-copy">
-            <p className="eyebrow">Unlockit</p>
+            <p className="eyebrow">{businessName}</p>
             <h1>מנעולן בתל אביב</h1>
             <p className="hero-text">
-              שירות מנעולנות מקצועי, אמין ומהיר בתל אביב והסביבה, עם פתרונות לבית,
-              לעסק ולרכב.
+              דביר מספק שירות מנעולנות מקצועי, אמין ומהיר בתל אביב והסביבה, עם
+              פתרונות לבית, לעסק ולרכב.
             </p>
             <p className="hero-definition">{businessDefinition}</p>
             <div className="hero-actions">
@@ -179,18 +180,19 @@ function App() {
         <main>
           <Section id="about" title="אודות">
             <p className="definition-card">
-              {businessDefinition} השירות ניתן בתל אביב והסביבה ומיועד לבתים,
-              דירות, משרדים ורכבים.
+              {businessDefinition} השירות מיועד לבתים, דירות, משרדים ורכבים, עם
+              הגעה מהירה ושירות אישי.
             </p>
             <p>
-              Unlockit מספקת שירותי מנעולן בתל אביב ובאזורים הסמוכים, עם דגש על
-              מקצועיות, אמינות, זמינות ופתרונות מעשיים למצבי נעילה, תקלה או צורך
-              בהחלפת מנעול.
+              דביר הוא מנעולן בתל אביב המתמחה בפתרונות פריצה, תיקון והחלפת
+              מנעולים ללקוחות פרטיים ועסקיים. השירות ניתן בתל אביב והסביבה, עם
+              דגש על מקצועיות, אמינות, זמינות ופתרונות מעשיים למצבי נעילה,
+              תקלה או צורך בהחלפת מנעול.
             </p>
           </Section>
 
           <Section id="services" title="שירותים">
-            <p className="section-intro">שירותי המנעולנות של Unlockit כוללים:</p>
+            <p className="section-intro">שירותי המנעולנות של דביר כוללים:</p>
             <ul className="services-grid">
               {services.map((service) => (
                 <li key={service.title} className="service-card">
@@ -214,8 +216,8 @@ function App() {
 
           <Section id="area" title="אזור שירות">
             <p>
-              Unlockit מעניקה שירות מנעולן בתל אביב והסביבה, עם הגעה מהירה
-              לאזורי השירות הקרובים ולמענה ללקוחות פרטיים ועסקיים.
+              דביר מעניק שירות מנעולן בתל אביב והסביבה, עם הגעה מהירה לאזורי
+              השירות הקרובים ולמענה ללקוחות פרטיים ועסקיים.
             </p>
           </Section>
 
