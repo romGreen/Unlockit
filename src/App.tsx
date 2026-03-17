@@ -12,6 +12,7 @@ type FaqItem = {
 
 const businessDefinition =
   'Unlockit היא עסק מנעולנות בתל אביב המספק שירותי פריצת דלתות, החלפת מנעולים, תיקון מנעולים, התקנת מנעולים חדשים ופריצת רכבים.';
+const siteUrl = 'https://dvir-locksmith.com';
 
 const services: Service[] = [
   {
@@ -69,6 +70,7 @@ const structuredData = [
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: 'Unlockit',
+    url: siteUrl,
     description: `${businessDefinition} השירות ניתן בתל אביב והסביבה לבית, לעסק ולרכב.`,
     telephone: '+972526660845',
     email: 'dvirsarig@gmail.com',
@@ -225,6 +227,7 @@ function App() {
             <div className="contact-list">
               <a href="tel:0526660845">טלפון: 052-6660845</a>
               <a href="mailto:dvirsarig@gmail.com">אימייל: dvirsarig@gmail.com</a>
+              <a href={siteUrl}>אתר: dvir-locksmith.com</a>
               <p>כתובת: דיזינגוף 104, תל אביב</p>
             </div>
           </Section>
