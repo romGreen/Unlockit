@@ -1,3 +1,15 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+[[redirects]]
+  from = "http://unlockit-tel.com/*"
+  to = "https://dvir-locksmith.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://unlockit-tel.com/*"
+  to = "https://dvir-locksmith.com/:splat"
+  status = 301
+  force = true
