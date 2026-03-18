@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { useState, useEffect, useRef, type FormEvent, type ReactNode } from 'react';
 
 /* ── Constants ── */
 const PHONE = '0526660845';
@@ -7,6 +7,7 @@ const PHONE_INTL = '+972526660845';
 const WHATSAPP_URL = `https://wa.me/972526660845?text=${encodeURIComponent('שלום, אשמח לקבל שירות מנעולן')}`;
 const SITE_URL = 'https://dvir-locksmith.com';
 const BUSINESS_NAME = 'דביר המנעולן';
+const TESTIMONIALS_STORAGE_KEY = 'unlockit_testimonials';
 
 /* ── Data ── */
 const services = [
@@ -50,17 +51,41 @@ const processSteps = [
   },
 ];
 
-const testimonials = [
+type Testimonial = {
+  name: string;
+  text: string;
+  city?: string;
+  date?: string;
+  rating?: number;
+};
+
+type ReviewForm = {
+  name: string;
+  city: string;
+  rating: number;
+  text: string;
+};
+
+const fallbackTestimonials: Testimonial[] = [
   {
-    name: 'איילת, תל אביב',
+    name: 'איילת',
+    city: 'תל אביב',
+    date: '2026-01-18',
+    rating: 5,
     text: 'נתקעתי מחוץ לבית בשעת לילה. דביר הגיע מהר מאוד, פתר את הבעיה בלי לגרום נזק והכל עם יחס אדיב ומקצועי.',
   },
   {
-    name: 'רועי, רמת גן',
+    name: 'רועי',
+    city: 'רמת גן',
+    date: '2025-12-10',
+    rating: 5,
     text: 'שירות מעולה! החלפת צילינדר בוצעה בצורה נקייה ומהירה. מחיר הוגן, הסבר ברור ושקט נפשי מלא.',
   },
   {
-    name: 'דנה, גבעתיים',
+    name: 'דנה',
+    city: 'גבעתיים',
+    date: '2025-11-26',
+    rating: 5,
     text: 'ננעלתי מחוץ לרכב וקיבלתי מענה תוך דקות. עבודה מקצועית, תקשורת מצוינת ואמינות ברמה גבוהה.',
   },
 ];
@@ -91,6 +116,8 @@ const structuredData = [
       { '@type': 'City', name: 'גבעתיים' },
       { '@type': 'City', name: 'חולון' },
       { '@type': 'City', name: 'בת ים' },
+      { '@type': 'City', name: 'הרצליה' },
+      { '@type': 'City', name: 'יפו' },
     ],
     openingHoursSpecification: { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], opens: '00:00', closes: '23:59' },
     hasOfferCatalog: {
@@ -161,12 +188,158 @@ const WhatsAppIcon = (
 /* ── Main App ── */
 function App() {
   const [navScrolled, setNavScrolled] = useState(false);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallbackTestimonials);
+  const [showAllTestimonials, setShowAllTestimonials] = useState(false);
+  const [reviewForm, setReviewForm] = useState<ReviewForm>({
+    name: '',
+    city: '',
+    rating: 5,
+    text: '',
+  });
+  const [reviewMessage, setReviewMessage] = useState('');
+
+  const formatDate = (value?: string) => {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return new Intl.DateTimeFormat('he-IL', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(date);
+  };
+
+  const toStars = (rating = 5) => {
+    const safeRating = Math.max(1, Math.min(5, Math.round(rating)));
+    return '★'.repeat(safeRating);
+  };
+
+  const visibleTestimonials = showAllTestimonials ? testimonials : testimonials.slice(0, 3);
 
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadTestimonials = async () => {
+      try {
+        const response = await fetch('/recommendations.json', { cache: 'no-store' });
+        if (!response.ok) return;
+
+        const payload = await response.json();
+        if (!Array.isArray(payload)) return;
+
+        const normalized = payload.reduce<Testimonial[]>((acc, item) => {
+          if (!item || typeof item !== 'object') return acc;
+
+          const candidate = item as Record<string, unknown>;
+          const name = typeof candidate.name === 'string' ? candidate.name.trim() : '';
+          const text = typeof candidate.text === 'string' ? candidate.text.trim() : '';
+          if (!name || !text) return acc;
+
+          acc.push({
+            name,
+            text,
+            city: typeof candidate.city === 'string' ? candidate.city.trim() : undefined,
+            date: typeof candidate.date === 'string' ? candidate.date : undefined,
+            rating: typeof candidate.rating === 'number' ? candidate.rating : undefined,
+          });
+
+          return acc;
+        }, []);
+
+        if (!cancelled) {
+          const baseTestimonials = normalized.length > 0 ? normalized : fallbackTestimonials;
+
+          let userTestimonials: Testimonial[] = [];
+          try {
+            const raw = window.localStorage.getItem(TESTIMONIALS_STORAGE_KEY);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (Array.isArray(parsed)) {
+                userTestimonials = parsed.reduce<Testimonial[]>((acc, item) => {
+                  if (!item || typeof item !== 'object') return acc;
+                  const candidate = item as Record<string, unknown>;
+                  const name = typeof candidate.name === 'string' ? candidate.name.trim() : '';
+                  const text = typeof candidate.text === 'string' ? candidate.text.trim() : '';
+                  if (!name || !text) return acc;
+
+                  acc.push({
+                    name,
+                    text,
+                    city: typeof candidate.city === 'string' ? candidate.city : undefined,
+                    date: typeof candidate.date === 'string' ? candidate.date : undefined,
+                    rating: typeof candidate.rating === 'number' ? candidate.rating : 5,
+                  });
+
+                  return acc;
+                }, []);
+              }
+            }
+          } catch {
+            userTestimonials = [];
+          }
+
+          setTestimonials([...userTestimonials, ...baseTestimonials]);
+        }
+      } catch {
+        // Keep fallback testimonials if file is missing or invalid.
+      }
+    };
+
+    void loadTestimonials();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleReviewSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const trimmedName = reviewForm.name.trim();
+    const trimmedCity = reviewForm.city.trim();
+    const trimmedText = reviewForm.text.trim();
+
+    if (!trimmedName) {
+      setReviewMessage('נא להזין שם מלא.');
+      return;
+    }
+
+    if (reviewForm.rating < 1 || reviewForm.rating > 5) {
+      setReviewMessage('הדירוג חייב להיות בין 1 ל-5.');
+      return;
+    }
+
+    const newReview: Testimonial = {
+      name: trimmedName,
+      city: trimmedCity || undefined,
+      rating: reviewForm.rating,
+      text: trimmedText || 'שירות מצוין, ממליץ בחום!',
+      date: new Date().toISOString(),
+    };
+
+    setTestimonials((prev) => {
+      const updated = [newReview, ...prev];
+      try {
+        const existing = window.localStorage.getItem(TESTIMONIALS_STORAGE_KEY);
+        const parsed = existing ? JSON.parse(existing) : [];
+        const userReviews = Array.isArray(parsed) ? parsed : [];
+        const nextUserReviews = [newReview, ...userReviews].slice(0, 30);
+        window.localStorage.setItem(TESTIMONIALS_STORAGE_KEY, JSON.stringify(nextUserReviews));
+      } catch {
+        // Ignore storage errors and still show in current session.
+      }
+      return updated;
+    });
+
+    setReviewForm({ name: '', city: '', rating: 5, text: '' });
+    setReviewMessage('ההמלצה נוספה בהצלחה! תודה רבה.');
+  };
 
   return (
     <>
@@ -176,7 +349,7 @@ function App() {
       <nav className={`navbar${navScrolled ? ' navbar-solid' : ''}`}>
         <div className="container navbar-inner">
           <a href="#" className="navbar-logo">
-            <img src="/logo.png" alt={BUSINESS_NAME} width="200" height="60" />
+            <img src="/logo.png" alt={BUSINESS_NAME} width="280" height="84" />
           </a>
           <div className="navbar-links">
             <a href="#about">אודות</a>
@@ -309,14 +482,80 @@ function App() {
               <p className="section-desc">אמינות, מקצועיות ושירות אישי הם מה שמוביל אותנו בכל עבודה</p>
             </Reveal>
 
-            <div className="testimonials-grid">
-              {testimonials.map((item, index) => (
-                <Reveal key={item.name} className="testimonial-card" delay={index * 100}>
-                  <div className="testimonial-stars" aria-hidden="true">★★★★★</div>
-                  <p className="testimonial-text">"{item.text}"</p>
-                  <div className="testimonial-author">{item.name}</div>
-                </Reveal>
-              ))}
+            <div className="testimonials-shell" aria-live="polite">
+              <form className="testimonial-form" onSubmit={handleReviewSubmit}>
+                <label className="testimonial-form-field">
+                  <span>שם מלא *</span>
+                  <input
+                    type="text"
+                    value={reviewForm.name}
+                    onChange={(event) => setReviewForm((prev) => ({ ...prev, name: event.target.value }))}
+                    placeholder="שם פרטי ושם משפחה"
+                    required
+                  />
+                </label>
+
+                <div className="testimonial-form-row">
+                  <label className="testimonial-form-field">
+                    <span>עיר</span>
+                    <input
+                      type="text"
+                      value={reviewForm.city}
+                      onChange={(event) => setReviewForm((prev) => ({ ...prev, city: event.target.value }))}
+                      placeholder="לדוגמה: תל אביב"
+                    />
+                  </label>
+
+                  <label className="testimonial-form-field">
+                    <span>דירוג (1-5) *</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={5}
+                      value={reviewForm.rating}
+                      onChange={(event) => setReviewForm((prev) => ({ ...prev, rating: Number(event.target.value) || 5 }))}
+                      required
+                    />
+                  </label>
+                </div>
+
+                <label className="testimonial-form-field">
+                  <span>המלצה (לא חובה)</span>
+                  <textarea
+                    rows={4}
+                    value={reviewForm.text}
+                    onChange={(event) => setReviewForm((prev) => ({ ...prev, text: event.target.value }))}
+                    placeholder="איך היה השירות?"
+                  />
+                </label>
+
+                <button type="submit" className="testimonial-submit">שלח המלצה</button>
+                {reviewMessage ? <p className="testimonial-form-message">{reviewMessage}</p> : null}
+              </form>
+
+              <div className="testimonials-list">
+                {visibleTestimonials.map((item, index) => (
+                  <article key={`${item.name}-${index}`} className="testimonial-card">
+                    <div className="testimonial-stars" aria-hidden="true">{toStars(item.rating)}</div>
+                    <p className="testimonial-text">"{item.text}"</p>
+                    <div className="testimonial-meta">
+                      <div className="testimonial-author">{item.name}{item.city ? `, ${item.city}` : ''}</div>
+                      {item.date ? <div className="testimonial-date">{formatDate(item.date)}</div> : null}
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {testimonials.length > 3 ? (
+                <button
+                  type="button"
+                  className="testimonials-more-btn"
+                  onClick={() => setShowAllTestimonials((prev) => !prev)}
+                  aria-expanded={showAllTestimonials}
+                >
+                  {showAllTestimonials ? 'הצג פחות המלצות' : 'הצג עוד המלצות'}
+                </button>
+              ) : null}
             </div>
           </div>
         </section>
@@ -391,7 +630,9 @@ function App() {
       {/* ===== FOOTER ===== */}
       <footer className="footer">
         <div className="container footer-inner">
-          <img src="/logo.png" alt={BUSINESS_NAME} className="footer-logo" />
+          <div className="footer-logo-wrap">
+            <img src="/logo.png" alt={BUSINESS_NAME} className="footer-logo" />
+          </div>
           <p>© {new Date().getFullYear()} {BUSINESS_NAME} – מנעולן בתל אביב | כל הזכויות שמורות</p>
         </div>
       </footer>

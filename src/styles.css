@@ -85,13 +85,13 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
 }
 
 .navbar-logo img {
-  height: 48px;
+  height: 72px;
   width: auto;
   transition: height var(--transition);
 }
 
 .navbar-solid .navbar-logo img {
-  height: 40px;
+  height: 58px;
 }
 
 .navbar-links {
@@ -505,20 +505,104 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
   position: relative;
 }
 
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+.testimonials-shell {
+  width: min(860px, 100%);
+  margin: 0 auto;
 }
 
-.testimonial-card {
-  position: relative;
+.testimonial-form {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 30px 24px;
-  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.testimonial-form-row {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 12px;
+}
+
+.testimonial-form-field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.testimonial-form-field span {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.testimonial-form-field input,
+.testimonial-form-field textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: #fff;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.testimonial-form-field input:focus,
+.testimonial-form-field textarea:focus {
+  outline: none;
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(47, 95, 165, 0.15);
+}
+
+.testimonial-form-field textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.testimonial-submit {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: #0d1c35;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.testimonial-submit:hover {
+  background: #122a50;
+  transform: translateY(-1px);
+}
+
+.testimonial-form-message {
+  margin: 10px 0 0;
+  font-size: 0.88rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.testimonials-list {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 8px 18px;
+}
+
+.testimonial-card {
+  position: relative;
+  padding: 24px 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.testimonial-card:last-child {
+  border-bottom: 0;
 }
 
 .testimonial-card::before {
@@ -534,9 +618,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
 }
 
 .testimonial-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-  border-color: rgba(27, 58, 107, 0.2);
+  background: rgba(244, 246, 249, 0.45);
 }
 
 .testimonial-stars {
@@ -551,8 +633,15 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
   font-size: 0.98rem;
   color: var(--color-text-light);
   line-height: 1.85;
-  min-height: 145px;
+  min-height: 120px;
   margin: 0 0 18px;
+}
+
+.testimonial-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .testimonial-author {
@@ -570,6 +659,32 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
   height: 8px;
   border-radius: 50%;
   background: var(--color-accent);
+}
+
+.testimonial-date {
+  font-size: 0.82rem;
+  color: var(--color-text-light);
+}
+
+.testimonials-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 14px auto 0;
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-primary);
+  background: #fff;
+  color: var(--color-primary);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.testimonials-more-btn:hover {
+  background: var(--color-primary);
+  color: #fff;
 }
 
 /* ============================================================
@@ -755,11 +870,20 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
   text-align: center;
 }
 
+.footer-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
 .footer-logo {
-  height: 40px;
+  height: 54px;
   width: auto;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
 }
 
 .footer p { font-size: 0.85rem; }
@@ -774,7 +898,6 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
    ============================================================ */
 @media (max-width: 1024px) {
   .services-grid { grid-template-columns: repeat(2, 1fr); }
-  .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
   .contact-grid { grid-template-columns: repeat(2, 1fr); }
   .navbar-links { display: none; }
 }
@@ -796,7 +919,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
   .about-image-wrap { order: -1; }
 
   .process-grid { grid-template-columns: 1fr; gap: 20px; }
-  .testimonials-grid { grid-template-columns: 1fr; }
+  .testimonial-form-row { grid-template-columns: 1fr; }
 
   .section { padding: 56px 0; }
   .section-header { margin-bottom: 36px; }
@@ -804,7 +927,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
 
 @media (max-width: 640px) {
   .navbar { padding: 12px 0; }
-  .navbar-logo img { height: 36px; }
+  .navbar-logo img { height: 52px; }
   .navbar-cta { padding: 8px 16px; font-size: 0.82rem; }
   .navbar-cta span { display: none; }
 
@@ -817,6 +940,23 @@ button { font: inherit; cursor: pointer; border: none; background: none; padding
 
   .services-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
+
+  .testimonial-form,
+  .testimonials-list {
+    padding: 10px 12px;
+  }
+
+  .footer-logo-wrap {
+    padding: 8px 12px;
+  }
+
+  .footer-logo {
+    height: 46px;
+  }
+
+  .testimonial-card { padding: 20px 4px; }
+  .testimonial-text { min-height: 120px; }
+  .testimonial-meta { flex-direction: column; align-items: flex-start; gap: 4px; }
 
   .section { padding: 44px 0; }
 
